@@ -3,7 +3,7 @@ function sentenceManipulation(sentence) {
   let toArray = sentence.split(" ");
   let result = [];
 
-  for (let i = 0; i < vocalLetter.length; i++) {
+  for (let i = 0; i < toArray.length; i++) {
     let word = toArray[i];
     let firstLetter = word.charAt(0);
 

@@ -35,8 +35,5 @@ readFile("data.json", function (err, data) {
       return;
     }
     rl.prompt();
-  }).on("close", () => {
-    console.log("Selamat tinggal!");
-    process.exit(0);
   });
 });

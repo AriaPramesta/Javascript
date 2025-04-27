@@ -1,0 +1,43 @@
+[
+  {
+    "title": "makan pagi",
+    "complete": true,
+    "tags": [
+      "pagi",
+      "makan"
+    ]
+  },
+  {
+    "title": "makan siang",
+    "complete": false,
+    "tags": [
+      "makan"
+    ]
+  },
+  {
+    "title": "makan malam",
+    "complete": false,
+    "tags": [
+      "makan"
+    ]
+  },
+  {
+    "title": "tidur siang",
+    "complete": false,
+    "tags": [
+      "istirahat"
+    ]
+  },
+  {
+    "title": "lari pagi",
+    "complete": false,
+    "tags": [
+      "olahraga"
+    ]
+  },
+  {
+    "title": "mengerjakan tugas",
+    "complete": false,
+    "tags": []
+  }
+]

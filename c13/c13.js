@@ -1,238 +1,189 @@
-import { readFile, writeFile } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const command = process.argv[2];
-const todo = process.argv.slice(3).join(" ");
-const arg3 = process.argv[3];
+let taskId = parseInt(process.argv[3]) - 1;
 
-let finalCommand = command;
-if (command.startsWith("list:") && (arg3 === "asc" || arg3 === "desc")) {
-  finalCommand = `${command} ${arg3}`;
-} else if (command.startsWith("filter:")) {
-  const tagName = command.split(":")[1];
-  finalCommand = `filter:${tagName}`;
-}
+const data = JSON.parse(
+  readFileSync("c13.json", { encoding: "utf8", flag: "r" })
+);
 
-readFile("c13.json", function (err, data) {
-  if (err) throw err;
-  const todos = JSON.parse(data);
-  const sortedTodos = [...todos];
-  let taskId = parseInt(arg3) - 1;
-  let count = 1;
+switch (command) {
+  case "add":
+    let todo = process.argv.slice(3).join(" ");
+    if (!todo) {
+      console.log("Mohon ketik sesuatu!");
+    } else {
+      let newTodo = { title: todo, isComplete: false, tags: [] };
+      data.push(newTodo);
+      writeFileSync("c13.json", JSON.stringify(data, null, 2));
+      console.log(`"${todo}" berhasil disimpan!`);
+    }
+    break;
 
-  switch (finalCommand) {
-    case "add":
-      if (!todo) {
-        console.log("Mohon ketik sesuatu!");
+  case "complete":
+    if (isNaN(taskId) || taskId < 0 || taskId >= data.length) {
+      console.log(
+        "Gunakan angka sesuai urutan untuk merubah todo yang anda mau!"
+      );
+    } else {
+      if (!data[taskId].isComplete) {
+        data[taskId].isComplete = true;
+        writeFileSync("c13.json", JSON.stringify(data, null, 2));
+        console.log(`${data[taskId].title} telah diselesaikan!`);
       } else {
-        let newTodo = { title: todo, complete: false, tags: [] };
-        todos.push(newTodo);
-        writeFile("c13.json", JSON.stringify(todos, null, 2), (err) => {
-          if (err) {
-            console.log("Gagal menyimpan: ", err);
-          } else {
-            console.log(`"${todo}" telah berhasil ditambahkan!`);
-          }
-        });
+        console.log("Status tugas sudah selesai sebelumnya!");
       }
-      break;
+    }
+    break;
 
-    case "task":
-      if (isNaN(taskId) || taskId < 0 || taskId >= todos.length) {
-        console.log("Task tidak tersedia!");
+  case "uncomplete":
+    if (isNaN(taskId) || taskId < 0 || taskId >= data.length) {
+      console.log(
+        "Gunakan angka sesuai urutan untuk merubah todo yang anda mau!"
+      );
+    } else {
+      if (data[taskId].isComplete) {
+        data[taskId].isComplete = false;
+        writeFileSync("c13.json", JSON.stringify(data, null, 2));
+        console.log(`status "${data[taskId].title}" telah dibatalkan!`);
       } else {
-        let task = todos[taskId];
-        console.log(`Detail task: ${taskId + 1}`);
-        console.log(`Title: ${task.title}`);
-        console.log(`Complete: ${task.complete ? "selesai" : "belum selesai"}`);
-        console.log(`Tags: ${task.tags.join(", ") || "-"}`);
+        console.log("Status tugas belum selesai sebelumnya!");
       }
-      break;
+    }
+    break;
 
-    case "delete":
-      if (isNaN(taskId) || taskId < 0 || taskId >= todos.length) {
+  case "delete":
+    if (isNaN(taskId) || taskId < 0 || taskId >= data.length) {
+      console.log(
+        "Todo yang ingin anda dihapus tidak ada, atau nilai yang anda masukan tidak valid!"
+      );
+    } else {
+      let newTodos = data.splice(taskId, 1)[0];
+      writeFileSync("c13.json", JSON.stringify(data, null, 2));
+      console.log(`"${newTodos.title}" berhasil dihapus!`);
+    }
+    break;
+
+  case "task":
+    if (isNaN(taskId) || taskId < 0 || taskId >= data.length) {
+      console.log("Task tidak tersedia!");
+    } else {
+      let task = data[taskId];
+      console.log(`Detail task: ${taskId + 1}`);
+      console.log(`Title: ${task.title}`);
+      console.log(`Complete: ${task.isComplete ? "selesai" : "belum selesai"}`);
+      console.log(`Tags: ${task.tags.join(", ") || "-"}`);
+    }
+    break;
+
+  case "list":
+    if (data.length === 0) {
+      console.log("Tidak ada todo yang tersedia!");
+    } else {
+      console.log("Daftar todo:");
+      data.forEach((data, index) => {
         console.log(
-          "Todo yang ingin anda dihapus tidak ada, atau nilai yang anda masukan tidak valid!"
-        );
-      } else {
-        let newTodos = todos.splice(taskId, 1)[0];
-        writeFile("c13.json", JSON.stringify(todos, null, 2), (err) => {
-          if (err) {
-            console.log("Gagal menghapus!", err);
-          } else {
-            console.log(`"${newTodos.title}" berhasil dihapus!`);
-          }
-        });
-      }
-      break;
-
-    case "list":
-      console.log("Daftar Todo:");
-      todos.forEach((todo, index) => {
-        console.log(
-          `${index + 1}. ${todo.complete ? "[x]" : "[ ]"} ${todo.title}`
+          `${index + 1}. ${data.isComplete ? "[x]" : "[ ]"} ${data.title}`
         );
       });
-      break;
+    }
+    break;
 
-    case "complete":
-      if (isNaN(taskId) || taskId < 0 || taskId >= todos.length) {
-        console.log(
-          "Gunakan angka sesuai urutan untuk merubah todo yang anda mau!"
-        );
-      } else {
-        if (!todos[taskId].complete) {
-          todos[taskId].complete = true;
-          writeFile("c13.json", JSON.stringify(todos, null, 2), (err) => {
-            if (err) {
-              console.log("Gagal merubah!", err);
-            } else {
-              console.log(`${todos[taskId].title} telah selesai!`);
-            }
-          });
-        } else {
-          console.log("Todo tidak tersedia atau sudah selesai");
-        }
-      }
-      break;
-
-    case "uncomplete":
-      if (isNaN(taskId) || taskId < 0 || taskId >= todos.length) {
-        console.log(
-          "Gunakan angka sesuai urutan untuk merubah todo yang anda mau!"
-        );
-      } else {
-        if (todos[taskId].complete) {
-          todos[taskId].complete = false;
-          writeFile("c13.json", JSON.stringify(todos, null, 2), (err) => {
-            if (err) {
-              console.log("Gagal merubah!", err);
-            } else {
-              console.log(`"${todos[taskId].title}" status telah dibatalkan!`);
-            }
-          });
-        }
-      }
-      break;
-
-    case "list:outstanding asc":
-      for (let i = 0; i < sortedTodos.length; i++) {
-        if (!sortedTodos[i].complete) {
+  case "list:outstanding":
+    if (process.argv[3] === "asc") {
+      for (let i = 0; i < data.length; i++) {
+        if (!data[i].isComplete) {
           console.log(
-            `${count}. ${sortedTodos[i].complete ? "[x]" : "[ ]"} ${
-              sortedTodos[i].title
-            }`
+            `${i + 1}. ${data[i].isComplete ? "[x]" : "[ ]"} ${data[i].title}`
           );
-          count++;
-        } else {
-          console.log("Semua sudah selesai");
         }
       }
-      break;
-
-    case "list:outstanding desc":
-      count = sortedTodos.length;
-      for (let i = sortedTodos.length - 1; i >= 0; i--) {
-        if (!sortedTodos[i].complete) {
+    } else if (process.argv[3] === "desc") {
+      for (let i = data.length - 1; i >= 0; i--) {
+        if (!data[i].isComplete) {
           console.log(
-            `${count}. ${sortedTodos[i].complete ? "[x]" : "[ ]"} ${
-              sortedTodos[i].title
-            }`
+            `${i + 1}. ${data[i].isComplete ? "[x]" : "[ ]"} ${data[i].title}`
           );
-          count--;
-        } else {
-          console.log("Semua sudah selesai");
-          return;
         }
       }
-      break;
+    }
+    break;
 
-    case "list:complete asc":
-      for (let i = 0; i < sortedTodos.length; i++) {
-        if (sortedTodos[i].complete) {
+  case "list:complete":
+    if (process.argv[3] === "asc") {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].isComplete) {
           console.log(
-            `${count}. ${sortedTodos[i].complete ? "[x]" : "[ ]"} ${
-              sortedTodos[i].title
-            }`
+            `${i + 1}. ${data[i].isComplete ? "[x]" : "[ ]"} ${data[i].title}`
           );
-          count++;
         }
       }
-      if (count === 1) {
-        console.log("Semua belum selesai");
-      }
-      break;
-
-    case "list:complete desc":
-      count = sortedTodos.length;
-      for (let i = sortedTodos.length - 1; i >= 0; i--) {
-        if (sortedTodos[i].complete) {
+    } else if (process.argv[3] === "desc") {
+      for (let i = data.length - 1; i >= 0; i--) {
+        if (data[i].isComplete) {
           console.log(
-            `${count}. ${sortedTodos[i].complete ? "[x]" : "[ ]"} ${
-              sortedTodos[i].title
-            }`
+            `${i + 1}. ${data[i].isComplete ? "[x]" : "[ ]"} ${data[i].title}`
           );
-          count--;
         }
       }
-      if (count === sortedTodos.length) {
-        console.log("Semua belum selesai");
-      }
-      break;
+    }
+    break;
 
-    case "tag":
-      let tag = process.argv.slice(4).join(" ");
-      if (isNaN(taskId) || taskId < 0 || taskId >= todos.length) {
-        console.log("Mohon pilih task yang ingin anda berikan tag!");
-      } else {
-        todos[taskId].tags.push(tag);
+  case "tag":
+    const tags = process.argv.slice(4);
 
-        writeFile("c13.json", JSON.stringify(todos, null, 2), (err) => {
-          if (err) {
-            console.log("Gagal menyimpan: ", err);
-          } else {
-            console.log(`"${tag}" telah berhasil ditambahkan ke dalam tag!`);
-          }
-        });
-      }
-      break;
-
-    case finalCommand.startsWith("filter:") ? finalCommand : undefined:
-      const filterTag = finalCommand.split(":")[1];
-      const filteredTodos = todos.filter((todo) =>
-        todo.tags.includes(filterTag)
-      );
-
-      if (filteredTodos.length === 0) {
-        console.log(`Tidak ada todo dengan tag "${filterTag}".`);
-      } else {
-        console.log(`Todo dengan tag "${filterTag}":`);
-        filteredTodos.forEach((todo, index) => {
-          console.log(
-            `${index + 1}. ${todo.complete ? "[x]" : "[ ]"} ${todo.title}`
-          );
-        });
-      }
-      break;
-
-    case "help":
-      console.log(">>> JS TODO <<<");
-      console.log("$ node c13.js <command>");
-      console.log("$ node c13.js list");
-      console.log("$ node c13.js task <task_id>");
-      console.log("$ node c13.js add <task_content>");
-      console.log("$ node c13.js delete <task_id>");
-      console.log("$ node c13.js complete <task_id>");
-      console.log("$ node c13.js uncomplete <task_id>");
-      console.log("$ node c13.js list:outstanding asc|desc");
-      console.log("$ node c13.js list:complete asc|desc");
+    if (isNaN(taskId) || taskId < 0 || taskId >= data.length) {
+      console.log("Mohon pilih task yang ingin anda berikan tag!");
+    } else if (tags.length === 0) {
+      console.log("Mohon masukkan setidaknya satu tag!");
+    } else {
+      data[taskId].tags.push(...tags);
+      writeFileSync("c13.json", JSON.stringify(data, null, 2));
       console.log(
-        "$ node c13.js tag <task_id> <tag_name_1> <tag_name_2> ... <tag_name_N>"
+        `Tag "${tags.join(", ")}" telah berhasil ditambahkan ke task ${taskId}!`
       );
-      console.log("$ node c13.js filter <tag_name>");
-      break;
+    }
+    break;
 
-    default:
+  case "help":
+    console.log(">>> JS TODO <<<");
+    console.log("$ node c13.js <command>");
+    console.log("$ node c13.js list");
+    console.log("$ node c13.js task <task_id>");
+    console.log("$ node c13.js add <task_content>");
+    console.log("$ node c13.js delete <task_id>");
+    console.log("$ node c13.js complete <task_id>");
+    console.log("$ node c13.js uncomplete <task_id>");
+    console.log("$ node c13.js list:outstanding asc|desc");
+    console.log("$ node c13.js list:complete asc|desc");
+    console.log(
+      "$ node c13.js tag <task_id> <tag_name_1> <tag_name_2> ... <tag_name_N>"
+    );
+    console.log("$ node c13.js filter <tag_name>");
+    break;
+
+  default:
+    if (command.startsWith("filter:")) {
+      const tagToFilter = command.split(":")[1];
+      let found = false;
+
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].tags.includes(tagToFilter)) {
+          const tags =
+            data[i].tags.length > 0 ? `Tags: #${data[i].tags.join(" #")}` : "";
+          console.log(`${i}. ${data[i].isComplete ? "[x]" : "[ ]"} ${
+            data[i].title
+          } 
+            ${tags}`);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        console.log(`Tidak ada task dengan tag "${tagToFilter}"`);
+      }
+    } else {
       console.log('ketik "node c13.js help" jika anda tidak tahu perintahnya!');
-      break;
-  }
-});
+    }
+    break;
+}

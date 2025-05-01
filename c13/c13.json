@@ -1,43 +1,32 @@
 [
   {
-    "title": "makan pagi",
-    "complete": true,
-    "tags": [
-      "pagi",
-      "makan"
-    ]
+    "title": "mencoba node",
+    "isComplete": false,
+    "tags": []
   },
   {
     "title": "makan siang",
-    "complete": false,
+    "isComplete": true,
     "tags": [
-      "makan"
+      "telur",
+      "dadar"
     ]
   },
   {
-    "title": "makan malam",
-    "complete": false,
-    "tags": [
-      "makan"
-    ]
-  },
-  {
-    "title": "tidur siang",
-    "complete": false,
-    "tags": [
-      "istirahat"
-    ]
-  },
-  {
-    "title": "lari pagi",
-    "complete": false,
-    "tags": [
-      "olahraga"
-    ]
-  },
-  {
-    "title": "mengerjakan tugas",
-    "complete": false,
+    "title": "main futsal",
+    "isComplete": false,
     "tags": []
+  },
+  {
+    "title": "main basket",
+    "isComplete": false,
+    "tags": []
+  },
+  {
+    "title": "makam malam",
+    "isComplete": true,
+    "tags": [
+      "telur"
+    ]
   }
 ]

@@ -6,16 +6,13 @@
   },
   {
     "title": "makan siang",
-    "isComplete": true,
+    "isComplete": false,
     "tags": [
       "telur",
-      "dadar"
+      "dadar",
+      "makan",
+      "kenyang"
     ]
-  },
-  {
-    "title": "main futsal",
-    "isComplete": false,
-    "tags": []
   },
   {
     "title": "main basket",
@@ -26,7 +23,14 @@
     "title": "makam malam",
     "isComplete": true,
     "tags": [
-      "telur"
+      "telur",
+      "makan",
+      "makan"
     ]
+  },
+  {
+    "title": "shoping",
+    "isComplete": false,
+    "tags": []
   }
 ]

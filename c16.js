@@ -60,10 +60,17 @@ class CarFactory {
   }
 
   produce(year) {
-    const amount = Math.floor(Math.random() * 6) + 1;
+    let amount = Math.floor(Math.random() * 6) + 1;
     for (let i = 0; i < amount; i++) {
       const sn = generateUUID();
-      const car = Math.random() < 0.5 ? new Agya(sn, year) : new Rush(sn, year);
+      const car = new Agya(sn, year);
+      this.cars.push(car);
+    }
+
+    amount = Math.floor(Math.random() * 6) + 1;
+    for (let i = 0; i < amount; i++) {
+      const sn = generateUUID();
+      const car = new Rush(sn, year);
       this.cars.push(car);
     }
   }

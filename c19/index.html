@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD (Create, Read, Update, Delete)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>JSON CRUD (Create, Read, Update, Delete)</h1>
+    <a href="/add">
+      <div class="btn-create">Create</div>
+    </a>
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Height</th>
+          <th>Weight</th>
+          <th>Birth Date</th>
+          <th>Is Married</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {table_content}
+      </tbody>
+    </table>
+  </body>
+</html>

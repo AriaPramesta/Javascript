@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Himawan",
+    "height": 168,
+    "weight": 80.52,
+    "birthdate": "1991-03-13",
+    "isMarried": false
+  },
+  {
+    "name": "Rahmat",
+    "height": 171,
+    "weight": 57.699,
+    "birthdate": "1996-11-03",
+    "isMarried": true
+  },
+  {
+    "name": "Aziz",
+    "height": 167,
+    "weight": 57.5,
+    "birthdate": "1991-05-13",
+    "isMarried": false
+  },
+  {
+    "name": "Aria",
+    "height": 175,
+    "weight": 53,
+    "birthdate": "2025-05-11",
+    "isMarried": false
+  }
+]

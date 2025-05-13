@@ -22,9 +22,9 @@
   },
   {
     "name": "Aria",
-    "height": 175,
-    "weight": 53,
-    "birthdate": "2025-05-11",
+    "height": "175",
+    "weight": "53.5",
+    "birthdate": "2005-04-11",
     "isMarried": false
   }
 ]

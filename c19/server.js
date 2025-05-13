@@ -29,7 +29,7 @@ createServer(function (req, res) {
           <td>${item.weight}</td>
           <td>${item.birthdate}</td>
           <td>${item.isMarried ? "Yes" : "Not Yet"}</td>
-          <td><a href="/edit?id=${index}">Update</a><a href="/delete?id=${index}">Delete</a></td>
+          <td><a href="/edit?id=${index}">Update</a><a href="/delete?id=${index}" onclick="return confirm('apakah anda yakin?')">Delete</a></td>
         </tr>
       `;
     });
@@ -48,8 +48,8 @@ createServer(function (req, res) {
         const formData = querystring.parse(body);
         const newFormData = {
           name: formData.name,
-          height: Number(formData.height),
-          weight: Number(formData.weight),
+          height: formData.height,
+          weight: formData.weight,
           birthdate: formData.birthdate,
           isMarried: formData.isMarried === "true",
         };

@@ -1,9 +1,5 @@
 function sum() {
-  let total = 0;
-  for (let i = 0; i < arguments.length; i++) {
-    total += arguments[i];
-  }
-  console.log(total);
+  console.log(Array.from(arguments).reduce((item, index) => item + index, 0))
 }
 
 sum(1, 2, 7);
